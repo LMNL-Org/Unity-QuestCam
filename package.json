@@ -1,0 +1,15 @@
+{
+    "name": "org.lmnl.questcam",
+    "version": "0.0.1",
+    "displayName": "QuestCam",
+    "unity": "2022.3",
+    "description": "QuestCam",
+    "dependencies": {
+        "com.unity.textmeshpro": "3.0.6",
+        "com.unity.xr.interaction.toolkit": "2.5.3",
+        "com.yasirkula.nativegallery": "1.8.0"
+    },
+    "author": {
+        "name": "LMNL"
+    }
+}

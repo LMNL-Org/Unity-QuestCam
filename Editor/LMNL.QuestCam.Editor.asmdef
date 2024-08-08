@@ -1,0 +1,16 @@
+{
+    "name": "LMNL.QuestCam.Editor",
+    "rootNamespace": "",
+    "references": [
+        "LMNL.QuestCam.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,20 @@
+{
+    "name": "LMNL.QuestCam.Runtime",
+    "rootNamespace": "QuestCam",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:fe685ec1767f73d42b749ea8045bfe43",
+        "GUID:6e5063adab271564ba0098a06a8cebda"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        ""
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
