@@ -1,4 +1,7 @@
 using System;
+
+#if UNITY_EDITOR
+
 using UnityEngine;
 using UnityEditor;
 
@@ -13,7 +16,14 @@ public class QuestCamRecorderEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        bool loggedIn = QuestCamService.CheckLogin();
+        EditorGUILayout.LabelField("You need to get game token from our site at");
+        if (EditorGUILayout.LinkButton("https://questcam.io/dev", new[] { GUILayout.ExpandWidth(true) }))
+        {
+            Application.OpenURL("https://questcam.io/dev");
+        }
+        base.OnInspectorGUI();
+        
+        /*bool loggedIn = QuestCamService.CheckLogin();
         
         if (!loggedIn)
             EditorGUILayout.LabelField("You are not logged in into QuestCam");
@@ -27,6 +37,7 @@ public class QuestCamRecorderEditor : Editor
 
         base.OnInspectorGUI();
         
-        EditorGUI.EndDisabledGroup();
+        EditorGUI.EndDisabledGroup();*/
     }
 }
+#endif

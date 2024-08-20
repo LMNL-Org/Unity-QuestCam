@@ -1,4 +1,5 @@
 using System;
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -75,3 +76,4 @@ public class QuestCamLoginWindow : EditorWindow
         EditorGUILayout.EndVertical();
     }
 }
+#endif

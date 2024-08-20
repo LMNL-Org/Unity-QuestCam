@@ -1,13 +1,13 @@
 using System;
-using System.Collections;
 using System.IO;
-using BRIJ;
 using QuestCam;
 using UnityEngine;
 using UnityEngine.Android;
 
 public class QuestCamRecorder : MonoBehaviour
 {
+    public string gameToken;
+    
     [Tooltip("Game cameras to record.")]
     public Camera[] cameras;
 
@@ -30,6 +30,10 @@ public class QuestCamRecorder : MonoBehaviour
         _audioInput = null;
         
         var recordingPath = await _mediaRecorder.FinishWriting();
+        
+        if (recordingPath.Length == 0)
+            return;
+        
         Debug.Log("Recorded to: " + recordingPath);
         
         NativeGallery.SaveVideoToGallery(recordingPath, "Videos", Path.GetFileName(recordingPath), OnSaveCallback);
@@ -52,8 +56,6 @@ public class QuestCamRecorder : MonoBehaviour
 
     public void StartRecording()
     {
-        _isRecording = true;
-        
         #if UNITY_ANDROID
         if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
         {
@@ -70,9 +72,14 @@ public class QuestCamRecorder : MonoBehaviour
             w = 720;
         }
         
-        _mediaRecorder = MediaRecorder.Create(w, h, 30, AudioSettings.outputSampleRate, (int)AudioSettings.speakerMode, 10_000_000, 2);
+        _mediaRecorder = MediaRecorder.Create(gameToken, w, h, 30, AudioSettings.outputSampleRate, (int)AudioSettings.speakerMode, 10_000_000, 2);
+        if (_mediaRecorder == null)
+            return;
+        
         _videoInput = new CameraInput(_mediaRecorder, cameras);
         _audioInput = new AudioInput(_mediaRecorder, FindObjectOfType<AudioListener>());
+        
+        _isRecording = true;
     }
 
     public void OnRecordingPressed()

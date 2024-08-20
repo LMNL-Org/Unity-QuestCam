@@ -50,6 +50,7 @@ namespace QuestCam
         }
 
         public static MediaRecorder Create(
+            string gameToken,
             int width = 0,
             int height = 0,
             float frameRate = 0f,
@@ -61,7 +62,7 @@ namespace QuestCam
             int audioBitRate = 64_000,
             string prefix = null)
         {
-            QuestCamNative.CreateMP4Recorder(CreatePath(extension: @".mp4", prefix: prefix), width, height, frameRate, sampleRate, channelCount,
+            QuestCamNative.CreateMP4Recorder(gameToken, CreatePath(extension: @".mp4", prefix: prefix), width, height, frameRate, sampleRate, channelCount,
                 videoBitRate, keyframeInterval, audioBitRate, out IntPtr recorder);
 
             if (recorder == IntPtr.Zero)

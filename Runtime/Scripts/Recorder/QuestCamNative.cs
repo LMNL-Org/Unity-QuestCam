@@ -39,6 +39,7 @@ namespace QuestCam
         
         [DllImport(Assembly, EntryPoint = @"QCRecorderCreateMP4")]
         public static extern Status CreateMP4Recorder (
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string gameToken,
             [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
             int width,
             int height,
