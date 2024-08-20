@@ -84,6 +84,12 @@ public class QuestCamRecorder : MonoBehaviour
 
     public void OnRecordingPressed()
     {
+        if (gameToken.Length == 0)
+        {
+            Debug.LogWarning("[QuestCam] Game key is not set !");
+            return;
+        }
+        
         if (!_isRecording)
         {
             changeLandscapeButton.SetActive(false);
