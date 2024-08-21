@@ -33,6 +33,7 @@
 - Set architecture to ARM64
 - Enable internet access
 - Set minimum Android SDK to 29 or higher
+- Use only OpenGL backend, `Vulkan is not yet supported!`
 
 ![alt text](https://github.com/LMNL-Org/Unity-QuestCam/blob/main/Images/player_settings.png?raw=true)
 
@@ -41,6 +42,7 @@
 QuestCam Developer Discord: https://discord.gg/QBj7mwXJuj
 
 ## Additional Notes
+- QuestCam is currently `only supporting Meta Quest 2 and above.`
 - The QuestCam prefab controls how the camera appears and disappears in your game. You'll have to link this to your game's interaction system so the player can press QuestCam's buttons.
 - Once set up correctly, the camera will automatically save videos to the Quest gallery when you build your game with VR support.
 - If you encounter issues, contact us through our Discord.
