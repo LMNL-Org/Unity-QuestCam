@@ -1,21 +1,56 @@
 # QuestCam-UnityPlugin
 
 ## How to setup:
+
 ### Unity
- - Install through package manager [https://github.com/yasirkula/UnityNativeGallery](https://github.com/yasirkula/UnityNativeGallery)
- - Install through package manager [https://github.com/LMNL-Org/Unity-QuestCam](https://github.com/LMNL-Org/Unity-QuestCam)
- - Inside Unity Asset window, go to `Packages/QuestCam/Runtime/Prefabs`
- - Drag and drop QuestCam prefab into you scene
-   ![alt text](https://github.com/LMNL-Org/Unity-QuestCam/blob/main/Images/game_token_example.png?raw=true)
+1. Install Unity Native Gallery through package manager:
+    - Go to Window > Package Manager
+    - Click the "+" icon and select "Add package from git URL"
+    - Paste this URL: https://github.com/yasirkula/UnityNativeGallery
+    - Wait for it to install
+
+2. Install QuestCam SDK through package manager:
+    - In Package Manager, click "+" again and select "Add package from git URL"
+    - Paste this URL: https://github.com/LMNL-Org/Unity-QuestCam
+
+3. Set up Quest Cam Prefab:
+    - In Unity, navigate to `Packages/QuestCam/Runtime/Prefabs`
+    - Drag and drop the QuestCam prefab into your scene
+    - Do not modify the QuestCam prefab
+
 ### Developer account
- - Register at our site [https://questcam.io/register](https://questcam.io/register)
- - Activate you email
- - Add you project after login at [https://questcam.io/dev/add_project](https://questcam.io/dev/add_project)
- - Copy the game key that will be at you project page
- - Paste it inside the QuestCam prefab root object recorder component
+1. Register at our site: https://questcam.io/register
+2. Activate your email (check your spam folder)
+3. After logging in, add your project at: https://questcam.io/dev/add_project
+    - Fill in your project details (name, company name (optional), description, store URL (optional))
+4. Copy the game key from your project page
+5. Paste the game key into the QuestCam Recorder component on the root object of the QuestCam prefab in your Unity scene
+
+![alt text](https://github.com/LMNL-Org/Unity-QuestCam/blob/main/Images/game_token_example.png?raw=true)
+
 ### Unity requirements (player settings)
- - You need to use IL2CPP (it will not work without it)
- - You need to be on ARM64
- - Internet access required
- - Have at least Android SDK 29
- ![alt text](https://github.com/LMNL-Org/Unity-QuestCam/blob/main/Images/player_settings.png?raw=true)
+- Use IL2CPP (it will not work without it)
+- Set architecture to ARM64
+- Enable internet access
+- Set minimum Android SDK to 29 or higher
+
+![alt text](https://github.com/LMNL-Org/Unity-QuestCam/blob/main/Images/player_settings.png?raw=true)
+
+### Join the QuestCam Developer Discord
+
+QuestCam Developer Discord: https://discord.gg/QBj7mwXJuj
+
+## Additional Notes
+- The QuestCam prefab controls how the camera appears and disappears in your game. You'll have to link this to your game's interaction system so the player can press QuestCam's buttons.
+- Once set up correctly, the camera will automatically save videos to the Quest gallery when you build your game with VR support.
+- If you encounter issues, contact us through our Discord.
+
+## Socials & Support
+
+Please consider donating to support the project on Patreon: https://patreon.com/QuestCam
+
+Community Discord: https://discord.gg/MNBaAJgFF2
+TikTok: https://www.tiktok.com/@questcamvr
+X: https://x.com/questcamvr
+
+
