@@ -21,7 +21,7 @@
 3. Set up Quest Cam Prefab:
     - In Unity, navigate to `Packages/QuestCam/Runtime/Prefabs`
     - Drag and drop the QuestCam prefab into your scene
-    - Do not modify the QuestCam prefab
+    - if you choose to modify the prefab, please keep the model generally the same and include our logo on the back unless we've discussed otherwise (we're making QuestCam for free, after all!)
 
 ### Developer account
 1. Register at our site: https://questcam.io/register
