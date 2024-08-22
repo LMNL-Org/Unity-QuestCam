@@ -1,5 +1,10 @@
 # QuestCam-UnityPlugin
 
+
+## Video Tutorial:
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/aJuM1bQ7Uxg/0.jpg)](https://www.youtube.com/watch?v=aJuM1bQ7Uxg)
+
+
 ## How to setup:
 
 ### Unity
@@ -43,7 +48,7 @@ QuestCam Developer Discord: https://discord.gg/QBj7mwXJuj
 
 ## Additional Notes
 - QuestCam is currently `only supporting Meta Quest 2 and above.`
-- The QuestCam prefab controls how the camera appears and disappears in your game. You'll have to link this to your game's interaction system so the player can press QuestCam's buttons.
+- The QuestCam prefab controls how the camera appears and disappears in your game. You'll have to link this to your game's interaction system so the player can press QuestCam's buttons. You'll also need to add a gesture or button for summoning QuestCam.
 - Once set up correctly, the camera will automatically save videos to the Quest gallery when you build your game with VR support.
 - If you encounter issues, contact us through our Discord.
 
