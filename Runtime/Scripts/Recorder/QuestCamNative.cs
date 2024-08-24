@@ -20,7 +20,7 @@ namespace QuestCam
         public delegate void ReadbackHandler (IntPtr context, IntPtr pixelBuffer);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-        [DllImport(Assembly, EntryPoint = @"QCCreateGLTexutreInput")]
+        [DllImport(Assembly, EntryPoint = @"QCCreateGLTextureInput")]
         public static extern void QCCreateGLTexutreInput(int width, int height, ReadbackHandler handler, out IntPtr input);
 
         [DllImport(Assembly, EntryPoint = @"QCCommitGLFrame")]
@@ -55,7 +55,8 @@ namespace QuestCam
         [DllImport(Assembly, EntryPoint = @"QCRecorderCommitFrame")]
         public static extern unsafe Status CommitFrame (
             this IntPtr recorder,
-            void* pixelBuffer
+            void* pixelBuffer,
+            long timestamp
         );
 
         [DllImport(Assembly, EntryPoint = @"QCRecorderCommitAudioSamples")]

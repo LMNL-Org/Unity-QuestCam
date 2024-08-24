@@ -17,7 +17,7 @@ namespace QuestCam
 
         public virtual void Dispose() => Texture2D.Destroy(_readbackTexture);
 
-        public virtual void CommitFrame(Texture texture)
+        public virtual void CommitFrame(Texture texture, long timestamp)
         {
             var (width, height) = _mediaRecorder.FrameSize;
             var renderTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
@@ -33,12 +33,12 @@ namespace QuestCam
             RenderTexture.active = prevActive;
             RenderTexture.ReleaseTemporary(renderTexture);
 
-            _mediaRecorder.CommitFrame(_readbackTexture.GetRawTextureData<byte>());
+            _mediaRecorder.CommitFrame(_readbackTexture.GetRawTextureData<byte>(), timestamp);
         }
 
         public static TextureInput Create(MediaRecorder mediaRecorder) => Application.platform switch
         {
-            //RuntimePlatform.Android => new GLTextureInput(mediaRecorder),
+            RuntimePlatform.Android => new GLTextureInput(mediaRecorder),
             _ => new TextureInput(mediaRecorder)
         };
     }

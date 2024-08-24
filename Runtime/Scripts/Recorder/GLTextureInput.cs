@@ -83,14 +83,14 @@ namespace QuestCam
             }
         }
 
-        public override unsafe void CommitFrame(Texture texture)
+        public override unsafe void CommitFrame(Texture texture, long timestamp)
         {
             lock (_fence)
             {
                 if (_input == default)
                     return;
                 
-                Action<IntPtr> callback = pixelBuffer => _mediaRecorder.CommitFrame((void*)pixelBuffer);
+                Action<IntPtr> callback = pixelBuffer => _mediaRecorder.CommitFrame((void*)pixelBuffer, timestamp);
                 var handle = GCHandle.Alloc(callback, GCHandleType.Normal);
                 var cmd = new CommandBuffer();
                 cmd.name = "GLTextureInput";

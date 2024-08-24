@@ -11,6 +11,7 @@ public class QuestCamRecorder : MonoBehaviour
     [Tooltip("Game cameras to record.")]
     public Camera[] cameras;
 
+    private RealtimeClock _clock;
     private MediaRecorder _mediaRecorder;
     private AudioInput _audioInput;
     private IDisposable _videoInput;
@@ -28,6 +29,7 @@ public class QuestCamRecorder : MonoBehaviour
         _videoInput = null;
         _audioInput?.Dispose();
         _audioInput = null;
+        _clock = null;
         
         var recordingPath = await _mediaRecorder.FinishWriting();
         
@@ -75,8 +77,10 @@ public class QuestCamRecorder : MonoBehaviour
         _mediaRecorder = MediaRecorder.Create(gameToken, w, h, 30, AudioSettings.outputSampleRate, (int)AudioSettings.speakerMode, 10_000_000, 2);
         if (_mediaRecorder == null)
             return;
+
+        _clock = new RealtimeClock();
         
-        _videoInput = new CameraInput(_mediaRecorder, cameras);
+        _videoInput = new CameraInput(_mediaRecorder, _clock, cameras);
         _audioInput = new AudioInput(_mediaRecorder, FindObjectOfType<AudioListener>());
         
         _isRecording = true;

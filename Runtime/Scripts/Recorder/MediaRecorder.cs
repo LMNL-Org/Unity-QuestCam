@@ -74,14 +74,14 @@ namespace QuestCam
             return new MediaRecorder(recorder, width, height);
         }
 
-        public unsafe void CommitFrame<T>(NativeArray<T> pixels) where T : unmanaged
+        public unsafe void CommitFrame<T>(NativeArray<T> pixels, long timestamp) where T : unmanaged
         {
-            CommitFrame(pixels.GetUnsafeReadOnlyPtr());
+            CommitFrame(pixels.GetUnsafeReadOnlyPtr(), timestamp);
         }
         
-        public unsafe void CommitFrame(void* pixels)
+        public unsafe void CommitFrame(void* pixels, long timestamp)
         {
-            _recorder.CommitFrame(pixels);
+            _recorder.CommitFrame(pixels, timestamp);
         }
         
         public unsafe void CommitSamples (float[] samples) {
