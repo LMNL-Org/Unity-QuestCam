@@ -36,9 +36,9 @@ namespace QuestCam
             _mediaRecorder.CommitFrame(_readbackTexture.GetRawTextureData<byte>(), timestamp);
         }
 
-        public static TextureInput Create(MediaRecorder mediaRecorder) => Application.platform switch
+        public static TextureInput Create(MediaRecorder mediaRecorder, ColorSpace colorSpace) => Application.platform switch
         {
-            RuntimePlatform.Android => new GLTextureInput(mediaRecorder),
+            RuntimePlatform.Android => new GLTextureInput(mediaRecorder, colorSpace),
             _ => new TextureInput(mediaRecorder)
         };
     }

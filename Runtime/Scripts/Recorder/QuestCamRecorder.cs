@@ -10,6 +10,8 @@ public class QuestCamRecorder : MonoBehaviour
     
     [Tooltip("Game cameras to record.")]
     public Camera[] cameras;
+    
+    public ColorSpace overrideColorSpace = ColorSpace.Uninitialized;
 
     private RealtimeClock _clock;
     private MediaRecorder _mediaRecorder;
@@ -23,6 +25,8 @@ public class QuestCamRecorder : MonoBehaviour
 
     public CameraTablet tablet;
 
+    private string m_LastRecordInternalFile;
+
     private async void StopRecording()
     {
         _videoInput?.Dispose();
@@ -31,16 +35,16 @@ public class QuestCamRecorder : MonoBehaviour
         _audioInput = null;
         _clock = null;
         
-        var recordingPath = await _mediaRecorder.FinishWriting();
+        m_LastRecordInternalFile = await _mediaRecorder.FinishWriting();
         
-        if (recordingPath.Length == 0)
+        if (m_LastRecordInternalFile.Length == 0)
             return;
         
-        Debug.Log("Recorded to: " + recordingPath);
+        Debug.Log("Recorded to: " + m_LastRecordInternalFile);
         
-        NativeGallery.SaveVideoToGallery(recordingPath, "Videos", Path.GetFileName(recordingPath), OnSaveCallback);
+        NativeGallery.SaveVideoToGallery(m_LastRecordInternalFile, "Videos", Path.GetFileName(m_LastRecordInternalFile), OnSaveCallback);
         
-        Debug.Log("Stopped recording: " + recordingPath);
+        Debug.Log("Stopped recording: " + m_LastRecordInternalFile);
         _isRecording = false;
     }
     
@@ -53,6 +57,16 @@ public class QuestCamRecorder : MonoBehaviour
         else
         {
             Debug.Log("Video could not be saved: " + path);
+        }
+
+        try
+        {
+            File.Delete(m_LastRecordInternalFile);
+            Debug.Log("Internal file deleted: " + m_LastRecordInternalFile);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Could not delete " + m_LastRecordInternalFile);
         }
     }
 
@@ -80,7 +94,7 @@ public class QuestCamRecorder : MonoBehaviour
 
         _clock = new RealtimeClock();
         
-        _videoInput = new CameraInput(_mediaRecorder, _clock, cameras);
+        _videoInput = new CameraInput(_mediaRecorder, _clock, overrideColorSpace, cameras);
         _audioInput = new AudioInput(_mediaRecorder, FindObjectOfType<AudioListener>());
         
         _isRecording = true;

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace QuestCam
 {
@@ -12,16 +13,14 @@ namespace QuestCam
             InvalidArgument     = 1,
             InvalidOperation    = 2,
             NotImplemented      = 3,
-            InvalidSession      = 101,
-            InvalidPlan         = 104,
-            LimitedPlan         = 105,
+            InvalidSession      = 4,
         }
         
         public delegate void ReadbackHandler (IntPtr context, IntPtr pixelBuffer);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
         [DllImport(Assembly, EntryPoint = @"QCCreateGLTextureInput")]
-        public static extern void QCCreateGLTexutreInput(int width, int height, ReadbackHandler handler, out IntPtr input);
+        public static extern void QCCreateGLTextureInput(int width, int height, ReadbackHandler handler, ColorSpace colorSpace, out IntPtr input);
 
         [DllImport(Assembly, EntryPoint = @"QCCommitGLFrame")]
         public static extern void CommitGLFrame(this IntPtr iput, IntPtr texture, IntPtr callback);
@@ -29,7 +28,7 @@ namespace QuestCam
         [DllImport(Assembly, EntryPoint = @"QCReleaseGLTextureInput")]
         public static extern void ReleaseGLTextureInput (this IntPtr input);
 #else
-        public static void QCCreateGLTexutreInput(int width, int height, ReadbackHandler handler, out IntPtr input) =>
+        public static void QCCreateGLTextureInput(int width, int height, ReadbackHandler handler, ColorSpace colorSpace, out IntPtr input) =>
             input = IntPtr.Zero;
         
         public static void CommitGLFrame(this IntPtr input, IntPtr texture, IntPtr callback) {}

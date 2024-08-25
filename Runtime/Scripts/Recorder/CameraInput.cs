@@ -34,8 +34,8 @@ namespace QuestCam
             _cameraInputAttachment.StartCoroutine(CommitFrames());
         }
 
-        public CameraInput(MediaRecorder mediaRecorder, IClock clock, params Camera[] cameras)
-            : this(TextureInput.Create(mediaRecorder), clock, cameras)
+        public CameraInput(MediaRecorder mediaRecorder, IClock clock, ColorSpace colorSpace, params Camera[] cameras)
+            : this(TextureInput.Create(mediaRecorder, colorSpace), clock, cameras)
         {}
         
         public void Dispose () {

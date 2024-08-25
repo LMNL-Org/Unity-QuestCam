@@ -61,7 +61,7 @@ namespace QuestCam
         private IntPtr _input;
         private readonly object _fence;
         
-        public GLTextureInput(MediaRecorder mediaRecorder) : base(mediaRecorder)
+        public GLTextureInput(MediaRecorder mediaRecorder, ColorSpace colorSpace) : base(mediaRecorder)
         {
             var (width, height) = mediaRecorder.FrameSize;
             _frameBuffer = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32);
@@ -69,7 +69,7 @@ namespace QuestCam
             _frameBufferId = _frameBuffer.GetNativeTexturePtr();
             _fence = new object();
             
-            QuestCamNative.QCCreateGLTexutreInput(width, height, OnReadbackCompleted, out _input);
+            QuestCamNative.QCCreateGLTextureInput(width, height, OnReadbackCompleted, colorSpace, out _input);
         }
 
         public override void Dispose()
