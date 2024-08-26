@@ -38,7 +38,7 @@ namespace QuestCam
 
         public static TextureInput Create(MediaRecorder mediaRecorder, ColorSpace colorSpace) => Application.platform switch
         {
-            RuntimePlatform.Android => new GLTextureInput(mediaRecorder, colorSpace),
+            //RuntimePlatform.Android => new GLTextureInput(mediaRecorder, colorSpace),
             _ => new TextureInput(mediaRecorder)
         };
     }
