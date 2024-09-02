@@ -39,7 +39,6 @@
 - Use IL2CPP (it will not work without it)
 - Set architecture to ARM64
 - Enable internet access
-- Set minimum Android SDK to 29 or higher
 - Use only OpenGL backend, `Vulkan is not yet supported!`
 
 ![alt text](https://github.com/LMNL-Org/Unity-QuestCam/blob/main/Images/player_settings.png?raw=true)
