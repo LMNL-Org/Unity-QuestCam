@@ -16,26 +16,6 @@ namespace QuestCam
             InvalidSession      = 4,
         }
         
-        public delegate void ReadbackHandler (IntPtr context, IntPtr pixelBuffer);
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-        [DllImport(Assembly, EntryPoint = @"QCCreateGLTextureInput")]
-        public static extern void QCCreateGLTextureInput(int width, int height, ReadbackHandler handler, ColorSpace colorSpace, out IntPtr input);
-
-        [DllImport(Assembly, EntryPoint = @"QCCommitGLFrame")]
-        public static extern void CommitGLFrame(this IntPtr iput, IntPtr texture, IntPtr callback);
-        
-        [DllImport(Assembly, EntryPoint = @"QCReleaseGLTextureInput")]
-        public static extern void ReleaseGLTextureInput (this IntPtr input);
-#else
-        public static void QCCreateGLTextureInput(int width, int height, ReadbackHandler handler, ColorSpace colorSpace, out IntPtr input) =>
-            input = IntPtr.Zero;
-        
-        public static void CommitGLFrame(this IntPtr input, IntPtr texture, IntPtr callback) {}
-        
-        public static void ReleaseGLTextureInput (this IntPtr input) {}
-#endif
-        
         [DllImport(Assembly, EntryPoint = @"QCRecorderCreateMP4")]
         public static extern Status CreateMP4Recorder (
             [MarshalAs(UnmanagedType.LPUTF8Str)] string gameToken,
