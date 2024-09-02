@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace QuestCam
 {
-    public class RealtimeClock : IClock
+    public class RealtimeClock
     {
         private readonly Stopwatch stopwatch;
         

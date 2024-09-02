@@ -34,6 +34,8 @@
 ![alt text](https://github.com/LMNL-Org/Unity-QuestCam/blob/main/Images/game_token_example.png?raw=true)
 
 ### Unity requirements (player settings)
+- Unity 2022.3+
+- Android API Level 24+
 - Use IL2CPP (it will not work without it)
 - Set architecture to ARM64
 - Enable internet access

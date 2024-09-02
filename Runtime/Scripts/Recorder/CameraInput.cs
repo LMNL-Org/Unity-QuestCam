@@ -11,12 +11,12 @@ namespace QuestCam
         public readonly IReadOnlyList<Camera> Cameras;
 
         private readonly TextureInput _input;
-        private readonly IClock _clock;
+        private readonly RealtimeClock _clock;
         private readonly RenderTextureDescriptor _renderTextureDescriptor;
         private readonly CameraInputAttachment _cameraInputAttachment;
         private int _frameCount;
 
-        public CameraInput(TextureInput input, IClock clock, params Camera[] cameras)
+        public CameraInput(TextureInput input, RealtimeClock clock, params Camera[] cameras)
         {
             Array.Sort(cameras, (a, b) => (int)(100 * (a.depth - b.depth)));
             var (width, height) = input.FrameSize;
@@ -34,7 +34,7 @@ namespace QuestCam
             _cameraInputAttachment.StartCoroutine(CommitFrames());
         }
 
-        public CameraInput(MediaRecorder mediaRecorder, IClock clock, ColorSpace colorSpace, params Camera[] cameras)
+        public CameraInput(MediaRecorder mediaRecorder, RealtimeClock clock, ColorSpace colorSpace, params Camera[] cameras)
             : this(TextureInput.Create(mediaRecorder, colorSpace), clock, cameras)
         {}
         
