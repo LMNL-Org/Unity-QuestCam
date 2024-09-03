@@ -39,7 +39,7 @@
 - Use IL2CPP (it will not work without it)
 - Set architecture to ARM64
 - Enable internet access
-- Use only OpenGL backend, `Vulkan is not yet supported!`
+- Vulkan or OpenGL backend
 
 ![alt text](https://github.com/LMNL-Org/Unity-QuestCam/blob/main/Images/player_settings.png?raw=true)
 
