@@ -17,7 +17,12 @@ public class QuestCamRecorder : MonoBehaviour
     private MediaRecorder _mediaRecorder;
     private AudioInput _audioInput;
     private IDisposable _videoInput;
-    public bool _isRecording = false;
+    private bool _isRecording = false;
+
+    public bool IsRecording
+    {
+        get { return _isRecording; }
+    }
     
     public GameObject recordButton;
     public GameObject stopRecordButton;
