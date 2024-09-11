@@ -21,8 +21,6 @@ namespace QuestCam
 
         public override void CommitFrame(Texture texture, long timestamp)
         {
-            var (width, height) = _mediaRecorder.FrameSize;
-            
             RenderTexture renderTexture = RenderTexture.GetTemporary(_renderTextureDescriptor);
             Graphics.Blit(texture, renderTexture);
             

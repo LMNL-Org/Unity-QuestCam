@@ -11,19 +11,13 @@ namespace QuestCam
 {
     public class MediaRecorder
     {
-        private IntPtr _recorder;
-        private static string directory = string.Empty;
-
+        private static string _directory = string.Empty;
+        
+        private readonly IntPtr _recorder;
         private readonly int _width;
         private readonly int _height;
         
-        public (int width, int height) FrameSize
-        {
-            get
-            {
-                return (_width, _height);
-            }
-        }
+        public (int width, int height) FrameSize => (_width, _height);
 
         private MediaRecorder(IntPtr recorder, int width, int height)
         {
@@ -33,19 +27,16 @@ namespace QuestCam
         }
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-        private static void OnInitialize () => directory = Application.isEditor ?
+        private static void OnInitialize () => _directory = Application.isEditor ?
             Directory.GetCurrentDirectory() :
             Application.persistentDataPath;
-        
-        internal static string CreatePath (string? extension = null, string? prefix = null) {
+        private static string CreatePath (string extension = null, string prefix = null) {
             // Create parent directory
-            var parentDirectory = !string.IsNullOrEmpty(prefix) ? Path.Combine(directory, prefix) : directory;
+            var parentDirectory = !string.IsNullOrEmpty(prefix) ? Path.Combine(_directory, prefix) : _directory;
             Directory.CreateDirectory(parentDirectory);
-            // Get recording path
-            var timestamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
-            var name = $"recording_{timestamp}{extension ?? string.Empty}";
+            //var timestamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+            //var name = $"recording_{timestamp}{extension ?? string.Empty}";
             var path = Path.Combine(parentDirectory, "video.mp4");
-            // Return
             return path;
         }
 
@@ -58,16 +49,25 @@ namespace QuestCam
             int channelCount = 0,
             int videoBitRate = 10_000_000,
             int keyframeInterval = 2,
-            float compressionQuality = 0.8f,
             int audioBitRate = 64_000,
             string prefix = null)
         {
-            QuestCamNative.CreateMP4Recorder(gameToken, CreatePath(extension: @".mp4", prefix: prefix), width, height, frameRate, sampleRate, channelCount,
-                videoBitRate, keyframeInterval, audioBitRate, out IntPtr recorder);
+            QuestCamNative.Status status = QuestCamNative.CreateMP4Recorder(
+                gameToken,
+                CreatePath(extension: @".mp4", prefix: prefix),
+                width,
+                height,
+                frameRate,
+                sampleRate,
+                channelCount,
+                videoBitRate,
+                keyframeInterval,
+                audioBitRate,
+                out IntPtr recorder);
 
             if (recorder == IntPtr.Zero)
             {
-                Debug.LogError("Could not create recorder, ptr was null!");
+                Debug.LogError("Could not create recorder, ptr was null! (" + status + ")");
                 return null;
             }
 
@@ -132,5 +132,14 @@ namespace QuestCam
             else
                 tcs?.SetException(new Exception(@"Recorder failed to finish writing"));
         }
+
+        public void SetUnityAudioVolume(float volume)
+            => _recorder.SetUnityAudioVolume(volume);
+
+        public void SetMicrophoneVolume(float volume)
+            => _recorder.SetMicrophoneAudioVolume(volume);
+
+        public void SetPaused(bool paused)
+            => _recorder.SetPaused(paused);
     }
 }

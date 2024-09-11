@@ -19,7 +19,7 @@ namespace QuestCam
 
         public virtual void CommitFrame(Texture texture, long timestamp)
         {
-            var (width, height) = _mediaRecorder.FrameSize;
+            /*var (width, height) = _mediaRecorder.FrameSize;
             var renderTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
             Graphics.Blit(texture, renderTexture);
 
@@ -33,7 +33,7 @@ namespace QuestCam
             RenderTexture.active = prevActive;
             RenderTexture.ReleaseTemporary(renderTexture);
 
-            _mediaRecorder.CommitFrame(_readbackTexture.GetRawTextureData<byte>(), timestamp);
+            _mediaRecorder.CommitFrame(_readbackTexture.GetRawTextureData<byte>(), timestamp);*/
         }
 
         public static TextureInput Create(MediaRecorder mediaRecorder, ColorSpace colorSpace)

@@ -17,40 +17,49 @@ public class QuestCamRecorder : MonoBehaviour
     private MediaRecorder _mediaRecorder;
     private AudioInput _audioInput;
     private IDisposable _videoInput;
-    private bool _isRecording = false;
-
-    public bool IsRecording
-    {
-        get { return _isRecording; }
-    }
+    private string _lastRecordInternalFile;
     
     public GameObject recordButton;
     public GameObject stopRecordButton;
     public GameObject changeLandscapeButton;
-
     public CameraTablet tablet;
 
-    private string m_LastRecordInternalFile;
+    public bool IsRecording { get; private set; } = false;
+    public float UnityVolume { get; private set; } = 1.0f;
+    public float MicrophoneVolume { get; private set; } = 1.0f;
+
+    public bool IsMicrophoneMuted => MicrophoneVolume == 0.0f;
+    
+    public delegate void OnRecordingStartedDelegate(QuestCamRecorder recorder);
+    public delegate void OnRecordingStoppedDelegate(QuestCamRecorder recorder);
+    
+    public event OnRecordingStartedDelegate OnRecordingStarted;
+    public event OnRecordingStoppedDelegate OnRecordingStopped;
 
     private async void StopRecording()
     {
+        if (!IsRecording)
+            return;
+        
         _videoInput?.Dispose();
         _videoInput = null;
         _audioInput?.Dispose();
         _audioInput = null;
         _clock = null;
         
-        m_LastRecordInternalFile = await _mediaRecorder.FinishWriting();
+        _lastRecordInternalFile = await _mediaRecorder.FinishWriting();
         
-        if (m_LastRecordInternalFile.Length == 0)
+        if (_lastRecordInternalFile.Length == 0)
             return;
         
-        Debug.Log("Recorded to: " + m_LastRecordInternalFile);
+        Debug.Log("Recorded to: " + _lastRecordInternalFile);
         
-        NativeGallery.SaveVideoToGallery(m_LastRecordInternalFile, "Videos", Path.GetFileName(m_LastRecordInternalFile), OnSaveCallback);
+        NativeGallery.SaveVideoToGallery(_lastRecordInternalFile, "Videos", Path.GetFileName(_lastRecordInternalFile), OnSaveCallback);
         
-        Debug.Log("Stopped recording: " + m_LastRecordInternalFile);
-        _isRecording = false;
+        Debug.Log("Stopped recording: " + _lastRecordInternalFile);
+        IsRecording = false;
+        
+        OnRecordingStopped?.Invoke(this);
     }
     
     private void OnSaveCallback(bool success, string path)
@@ -66,17 +75,21 @@ public class QuestCamRecorder : MonoBehaviour
 
         try
         {
-            File.Delete(m_LastRecordInternalFile);
-            Debug.Log("Internal file deleted: " + m_LastRecordInternalFile);
+            File.Delete(_lastRecordInternalFile);
+            Debug.Log("Internal file deleted: " + _lastRecordInternalFile);
         }
         catch (Exception e)
         {
-            Debug.Log("Could not delete " + m_LastRecordInternalFile);
+            Debug.Log("Could not delete " + _lastRecordInternalFile);
+            Debug.Log(e);
         }
     }
 
-    public void StartRecording()
+    private void StartRecording()
     {
+        if (IsRecording)
+            return;
+        
         #if UNITY_ANDROID
         if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
         {
@@ -96,13 +109,18 @@ public class QuestCamRecorder : MonoBehaviour
         _mediaRecorder = MediaRecorder.Create(gameToken, w, h, 30, AudioSettings.outputSampleRate, (int)AudioSettings.speakerMode, 10_000_000, 2);
         if (_mediaRecorder == null)
             return;
+        
+        _mediaRecorder.SetUnityAudioVolume(UnityVolume);
+        _mediaRecorder.SetMicrophoneVolume(MicrophoneVolume);
 
         _clock = new RealtimeClock();
         
         _videoInput = new CameraInput(_mediaRecorder, _clock, overrideColorSpace, cameras);
         _audioInput = new AudioInput(_mediaRecorder, FindObjectOfType<AudioListener>());
         
-        _isRecording = true;
+        IsRecording = true;
+
+        OnRecordingStarted?.Invoke(this);
     }
 
     public void OnRecordingPressed()
@@ -113,12 +131,20 @@ public class QuestCamRecorder : MonoBehaviour
             return;
         }
         
-        if (!_isRecording)
+        if (!IsRecording)
         {
             changeLandscapeButton.SetActive(false);
             recordButton.SetActive(false);
             stopRecordButton.SetActive(true);
             StartRecording();
+
+            if (_mediaRecorder == null)
+            {
+                IsRecording = false;
+                recordButton.SetActive(true);
+                stopRecordButton.SetActive(false);
+                changeLandscapeButton.SetActive(true);
+            }
         }
         else
         {
@@ -128,4 +154,32 @@ public class QuestCamRecorder : MonoBehaviour
             changeLandscapeButton.SetActive(true);
         }
     }
+
+    public void SetUnityAudioVolume(float volume)
+    {
+        UnityVolume = volume;
+        
+        if (_mediaRecorder != null)
+            _mediaRecorder.SetUnityAudioVolume(volume);
+    }
+
+    public void SetMicrophoneVolume(float volume)
+    {
+        MicrophoneVolume = volume;
+        
+        if (_mediaRecorder != null)
+            _mediaRecorder.SetMicrophoneVolume(volume);
+    }
+
+    public void SetPaused(bool paused)
+    {
+        if (_mediaRecorder != null)
+            _mediaRecorder.SetPaused(paused);
+    }
+
+    public void MuteMicrophone() => SetMicrophoneVolume(0.0f);
+    
+    public void UnmuteMicrophone() => SetMicrophoneVolume(1.0f);
+    
+    public void SetMicrophoneMuted(bool muted) => SetMicrophoneVolume(muted ? 0.0f : 1.0f);
 }

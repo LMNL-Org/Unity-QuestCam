@@ -49,5 +49,14 @@ namespace QuestCam
             RecordingHandler handler,
             IntPtr context
         );
+        
+        [DllImport(Assembly, EntryPoint = @"QCRecorderSetUnityAudioVolume")]
+        public static extern void SetUnityAudioVolume(this IntPtr recorder, float volume);
+        
+        [DllImport(Assembly, EntryPoint = @"QCRecorderSetMicrophoneAudioVolume")]
+        public static extern void SetMicrophoneAudioVolume(this IntPtr recorder, float volume);
+        
+        [DllImport(Assembly, EntryPoint = @"QCRecorderSetPaused")]
+        public static extern void SetPaused(this IntPtr recorder, bool paused);
     }
 }
