@@ -8,17 +8,20 @@
 ## How to setup:
 
 ### Unity
-1. Install Unity Native Gallery through package manager:
+1. Install `git` 
+    - Download git from here and install it https://git-scm.com/downloads (you will need to restart unity after installing)
+
+2. Install `Unity Native Gallery` through package manager:
     - Go to Window > Package Manager
     - Click the "+" icon and select "Add package from git URL"
     - Paste this URL: https://github.com/yasirkula/UnityNativeGallery.git
     - Wait for it to install
 
-2. Install QuestCam SDK through package manager:
+3. Install `QuestCam SDK` through package manager:
     - In Package Manager, click "+" again and select "Add package from git URL"
     - Paste this URL: https://github.com/LMNL-Org/Unity-QuestCam.git
 
-3. Set up Quest Cam Prefab:
+4. Set up `Quest Cam Prefab`:
     - In Unity, navigate to `Packages/QuestCam/Runtime/Prefabs`
     - Drag and drop the QuestCam prefab into your scene
     - if you choose to modify the prefab, please keep the model generally the same and include our logo on the back unless we've discussed otherwise (we're making QuestCam for free, after all!)
