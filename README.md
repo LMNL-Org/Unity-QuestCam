@@ -56,6 +56,10 @@ QuestCam Developer Discord: https://discord.gg/QBj7mwXJuj
 - Once set up correctly, the camera will automatically save videos to the Quest gallery when you build your game with VR support.
 - If you encounter issues, contact us through our Discord.
 
+## Terms of Use
+- You must keep the QuestCam logo clearly visible on the camera somewhere if you choose to modify the camera model.
+- If you choose to sell QuestCam in your game for USD or in-game currency, you must acitvely be supporting our Patreon at $15/month or more (link below).
+
 ## Socials & Support
 
 Please consider donating to support the project on Patreon: https://patreon.com/QuestCam
