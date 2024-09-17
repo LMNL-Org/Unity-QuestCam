@@ -905,7 +905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f13d2750743b749c0b6e981865df9364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameToken: 23754721-dfbe-46a4-8920-15d5c3b20d84
+  gameToken: 
   cameras:
   - {fileID: 8693132570376300208}
   overrideColorSpace: -1
