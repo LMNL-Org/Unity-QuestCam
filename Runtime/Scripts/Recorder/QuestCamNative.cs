@@ -16,6 +16,8 @@ namespace QuestCam
             InvalidSession      = 4,
         }
         
+        public delegate void RecorderCreatedHandler (IntPtr context, IntPtr recorder, Status status, int w, int h);
+        
         [DllImport(Assembly, EntryPoint = @"QCRecorderCreateMP4")]
         public static extern Status CreateMP4Recorder (
             [MarshalAs(UnmanagedType.LPUTF8Str)] string gameToken,
@@ -28,7 +30,8 @@ namespace QuestCam
             int videoBitrate,
             int keyframeInterval,
             int audioBitRate,
-            out IntPtr recorder
+            IntPtr context,
+            RecorderCreatedHandler handler
         );
         
         [DllImport(Assembly, EntryPoint = @"QCRecorderCommitFrame")]

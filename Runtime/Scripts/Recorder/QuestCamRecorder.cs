@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using QuestCam;
 using UnityEngine;
 using UnityEngine.Android;
@@ -20,6 +21,7 @@ public class QuestCamRecorder : MonoBehaviour
     private string _lastRecordInternalFile;
     
     public GameObject recordButton;
+    public GameObject recordLoadingButton;
     public GameObject stopRecordButton;
     public GameObject changeLandscapeButton;
     public CameraTablet tablet;
@@ -27,6 +29,8 @@ public class QuestCamRecorder : MonoBehaviour
     public bool IsRecording { get; private set; } = false;
     public float UnityVolume { get; private set; } = 1.0f;
     public float MicrophoneVolume { get; private set; } = 1.0f;
+    
+    private bool _waitingForRecorder = false;
 
     public bool IsMicrophoneMuted => MicrophoneVolume == 0.0f;
     
@@ -85,9 +89,52 @@ public class QuestCamRecorder : MonoBehaviour
         }
     }
 
+    private Task<MediaRecorder> _mediaRecorderCreateTask = null;
+
+    private void Update()
+    {
+        if (_mediaRecorderCreateTask != null)
+        {
+            if (_mediaRecorderCreateTask.IsCompleted)
+            {
+                CompleteRecordingStart(_mediaRecorderCreateTask.Result);
+                _mediaRecorderCreateTask = null;
+            }
+        }
+    }
+
+    private void CompleteRecordingStart(MediaRecorder recorder)
+    {
+        _mediaRecorder = recorder;
+        _waitingForRecorder = false;
+
+        if (_mediaRecorder == null)
+        {
+            IsRecording = false;
+            recordButton.SetActive(true);
+            stopRecordButton.SetActive(false);
+            recordLoadingButton.SetActive(false);
+            return;
+        }
+        
+        _mediaRecorder.SetUnityAudioVolume(UnityVolume);
+        _mediaRecorder.SetMicrophoneVolume(MicrophoneVolume);
+
+        _clock = new RealtimeClock();
+        
+        _videoInput = new CameraInput(_mediaRecorder, _clock, overrideColorSpace, cameras);
+        _audioInput = new AudioInput(_mediaRecorder, FindObjectOfType<AudioListener>());
+        
+        IsRecording = true;
+        stopRecordButton.SetActive(true);
+        recordLoadingButton.SetActive(false);
+
+        OnRecordingStarted?.Invoke(this);
+    }
+
     private void StartRecording()
     {
-        if (IsRecording)
+        if (IsRecording || _waitingForRecorder)
             return;
         
         #if UNITY_ANDROID
@@ -105,22 +152,9 @@ public class QuestCamRecorder : MonoBehaviour
             h = 1280;
             w = 720;
         }
-        
-        _mediaRecorder = MediaRecorder.Create(gameToken, w, h, 30, AudioSettings.outputSampleRate, (int)AudioSettings.speakerMode, 10_000_000, 2);
-        if (_mediaRecorder == null)
-            return;
-        
-        _mediaRecorder.SetUnityAudioVolume(UnityVolume);
-        _mediaRecorder.SetMicrophoneVolume(MicrophoneVolume);
 
-        _clock = new RealtimeClock();
-        
-        _videoInput = new CameraInput(_mediaRecorder, _clock, overrideColorSpace, cameras);
-        _audioInput = new AudioInput(_mediaRecorder, FindObjectOfType<AudioListener>());
-        
-        IsRecording = true;
-
-        OnRecordingStarted?.Invoke(this);
+        _waitingForRecorder = true;
+        _mediaRecorderCreateTask = MediaRecorder.Create(gameToken, w, h, 30, AudioSettings.outputSampleRate, (int)AudioSettings.speakerMode, 10_000_000, 2);
     }
 
     public void OnRecordingPressed()
@@ -131,20 +165,16 @@ public class QuestCamRecorder : MonoBehaviour
             return;
         }
         
+        if (_waitingForRecorder)
+            return;
+        
         if (!IsRecording)
         {
             changeLandscapeButton.SetActive(false);
             recordButton.SetActive(false);
-            stopRecordButton.SetActive(true);
+            stopRecordButton.SetActive(false);
+            recordLoadingButton.SetActive(true);
             StartRecording();
-
-            if (_mediaRecorder == null)
-            {
-                IsRecording = false;
-                recordButton.SetActive(true);
-                stopRecordButton.SetActive(false);
-                changeLandscapeButton.SetActive(true);
-            }
         }
         else
         {

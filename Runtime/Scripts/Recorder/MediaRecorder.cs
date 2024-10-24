@@ -40,7 +40,32 @@ namespace QuestCam
             return path;
         }
 
-        public static MediaRecorder Create(
+        [MonoPInvokeCallback(typeof(QuestCamNative.RecordingHandler))]
+        private static void OnRecorderCreated(IntPtr context, IntPtr recorder, QuestCamNative.Status status, int w, int h)
+        {
+            // Get tcs
+            TaskCompletionSource<MediaRecorder> tcs;
+            try {
+                var handle = (GCHandle)context;
+                tcs = handle.Target as TaskCompletionSource<MediaRecorder>;
+                handle.Free();
+            } catch (Exception ex) {
+                Debug.LogException(ex);
+                return;
+            }
+
+            if (recorder == IntPtr.Zero)
+            {
+                Debug.LogError("Could not create recorder, ptr was null! (" + status + ")");
+                tcs?.SetResult(null);
+                return;
+            }
+            
+            // Invoke
+            tcs?.SetResult(new MediaRecorder(recorder, w, h));
+        }
+        
+        public static Task<MediaRecorder> Create(
             string gameToken,
             int width = 0,
             int height = 0,
@@ -52,7 +77,10 @@ namespace QuestCam
             int audioBitRate = 64_000,
             string prefix = null)
         {
-            QuestCamNative.Status status = QuestCamNative.CreateMP4Recorder(
+            var tcs = new TaskCompletionSource<MediaRecorder>();
+            var handle = GCHandle.Alloc(tcs, GCHandleType.Normal);
+            
+            QuestCamNative.CreateMP4Recorder(
                 gameToken,
                 CreatePath(extension: @".mp4", prefix: prefix),
                 width,
@@ -63,15 +91,10 @@ namespace QuestCam
                 videoBitRate,
                 keyframeInterval,
                 audioBitRate,
-                out IntPtr recorder);
+                (IntPtr)handle,
+                OnRecorderCreated);
 
-            if (recorder == IntPtr.Zero)
-            {
-                Debug.LogError("Could not create recorder, ptr was null! (" + status + ")");
-                return null;
-            }
-
-            return new MediaRecorder(recorder, width, height);
+            return tcs.Task;
         }
 
         public unsafe void CommitFrame<T>(NativeArray<T> pixels, long timestamp) where T : unmanaged
